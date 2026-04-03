@@ -83,8 +83,9 @@ def force_moment_below_dredge(gamma, H, D, Ka, Kp, q=0.0, delta_ka=0.0):
     # integrate numerically for robustness
     z = np.linspace(0, D, 2000)
     p = Ka * gamma * (H + z) + Ka * q + delta_ka * gamma * (H + z) - Kp * gamma * z
-    F = np.trapz(p, z)
-    M = np.trapz(p * z, z)
+    trap = getattr(np, "trapezoid", None) or getattr(np, "trapz")
+    F = trap(p, z)
+    M = trap(p * z, z)
     return F, M
 
 
